@@ -9,13 +9,13 @@
   <xs:element name="subjective">
     <xs:complexType>
       <xs:all>
-        <xs:element name="man-machine_interface" type="xs:string"/>
-        <xs:element name="Programming_flexibility" type="xs:string"/>
-        <xs:element name="vendors_service_contract" type="xs:string"/>
-        <xs:element name="simulation_software" type="xs:string"/>
+        <xs:element name="man machine interface" type="xs:string"/>
+        <xs:element name="Programming flexibility" type="xs:string"/>
+        <xs:element name="vendors service contract" type="xs:string"/>
+        <xs:element name="simulation software" type="xs:string"/>
         <xs:element name="stability" type="xs:string"/>
         <xs:element name="compliance" type="xs:string"/>
-        <xs:element name="vendors_training" type="xs:boolean"/>
+        <xs:element name="vendors training" type="xs:boolean"/>
         <xs:element name="reliability" type="xs:string"/>
         <xs:element name="sensitivity" type="xs:string"/>
         <xs:element name="accuracy" type="xs:string"/>
@@ -28,11 +28,11 @@
       <xs:all>
         
              <xs:element name="Load_capacity" type="xs:float"/>
-             <xs:element name="speed_of_travel" type="xs:float"/>
+             <xs:element name="speed of travel" type="xs:float"/>
           
-                 <xs:element name="memory_RAM" type="xs:float"/>
-                 <xs:element name="memory_Rom" type="xs:float"/>
-                 <xs:element name="memory_flash" type="xs:float"/>
+                 <xs:element name="memory RAM" type="xs:float"/>
+                 <xs:element name="memory Rom" type="xs:float"/>
+                 <xs:element name="memory flash" type="xs:float"/>
             	
              <xs:element name="Warranty_period" type="xs:float"/>
 
@@ -41,19 +41,19 @@
                  <xs:element name="vertical_Manipulator_reach" type="xs:float"/>
                  <xs:element name="horizontal_Manipulator_reach" type="xs:float"/>
             		
-             <xs:element name="degree_of_freedom" type="xs:float"/>
-             <xs:element name="ambient_temperature" type="xs:float"/>
-             <xs:element name="manipulator_velocity" type="xs:float"/>
-             <xs:element name="Gripper_payload" type="xs:float"/>
-             <xs:element name="run_time" type="xs:float"/>
+             <xs:element name="degree of freedom" type="xs:float"/>
+             <xs:element name="ambient temperature" type="xs:float"/>
+             <xs:element name="manipulator velocity" type="xs:float"/>
+             <xs:element name="Gripper payload" type="xs:float"/>
+             <xs:element name="battery life" type="xs:float"/>
            
         
-              <xs:element name="repeatability_error" type="xs:float"/>
-              <xs:element name="Delivery_time" type="xs:float"/>
-              <xs:element name="reaction_speed" type="xs:float"/>
+              <xs:element name="repeatability error" type="xs:float"/>
+              <xs:element name="Delivery time" type="xs:float"/>
+              <xs:element name="reaction speed" type="xs:float"/>
               
-                    <xs:element name="purchase_cost" type="xs:float"/>
-                    <xs:element name="maintenance_cost" type="xs:float"/>
+                    <xs:element name="purchase cost" type="xs:float"/>
+                    <xs:element name="maintenance cost" type="xs:float"/>
                  
            
       </xs:all>

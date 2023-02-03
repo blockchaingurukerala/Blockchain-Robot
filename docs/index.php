@@ -3,27 +3,27 @@
     //For insert into D
     
     if (isset($_POST["robo_name"][0])) {
-              $conn = mysqli_connect("localhost","root","", "robodb");
-              $itemCount = count($_POST["robo_name"]);
-              $itemValues=0;
-              $query = "INSERT INTO rating (id,roboname,robopurpose,roboseller,customer,rating) VALUES ";
-              $queryValue = "";
-              for($i=0;$i<$itemCount;$i++) {
-                  $itemValues++;
-                  if (isset($_POST["robo_checkBox"][$i])) {
-                    if($queryValue!="") {
-                      $queryValue .= ",";
-                    }
-                    $queryValue .= "('" . $_POST["robo_id"][$i] . "', '" . $_POST["robo_name"][$i] . "', '" . $_POST["robo_purpose"][$i] . "', '" . $_POST["robo_seller"][$i] . "', '" . $_POST["robo_customer"][$i] . "', '" . $_POST["robo_selectrating"][$i] . "')";
-                    }				
-              }
-              $sql = $query.$queryValue;
-              if($itemValues!=0) {
-                  $result = mysqli_query($conn, $sql);
+              // $conn = mysqli_connect("localhost","root","", "robodb");
+              // $itemCount = count($_POST["robo_name"]);
+              // $itemValues=0;
+              // $query = "INSERT INTO rating (id,roboname,robopurpose,roboseller,customer,rating) VALUES ";
+              // $queryValue = "";
+              // for($i=0;$i<$itemCount;$i++) {
+              //     $itemValues++;
+              //     if (isset($_POST["robo_checkBox"][$i])) {
+              //       if($queryValue!="") {
+              //         $queryValue .= ",";
+              //       }
+              //       $queryValue .= "('" . $_POST["robo_id"][$i] . "', '" . $_POST["robo_name"][$i] . "', '" . $_POST["robo_purpose"][$i] . "', '" . $_POST["robo_seller"][$i] . "', '" . $_POST["robo_customer"][$i] . "', '" . $_POST["robo_selectrating"][$i] . "')";
+              //       }				
+              // }
+              // $sql = $query.$queryValue;
+              // if($itemValues!=0) {
+              //     $result = mysqli_query($conn, $sql);
 
-                if(!empty($result)) $message = "Added Successfully.";
-              }
-              mysqli_close($conn);
+              //   if(!empty($result)) $message = "Added Successfully.";
+              // }
+              // mysqli_close($conn);
   }
 
 ?>
@@ -67,7 +67,7 @@
      
        <!-- Customer page starts  -->
        <div id="customer" style="display: none;">
-        <h1>IBBRS</h1>
+        <h1>IBBRB</h1>
         <p>Your Smart way to seelct the best suited robot for your tasks</p>
         <li> <a style="pointer-events: none; " onclick="App.showAddNewRobotPage()"><i class="fa fa-dashboard"></i> <span>Add New Robot</span></a></li>
         <li> <a style="pointer-events: none; " onclick="App.showupdateOntologyPage()"><i class="fa fa-dashboard"></i> <span>Update ontology</span></a></li>
@@ -79,7 +79,7 @@
         <!-- Customer page starts  -->
          <!-- Supplier page starts  -->
        <div id="supplier" style="display: none;">
-        <h1>IBBRS</h1>
+        <h1>IBBRB</h1>
         <p>Your Smart way to seelct the best suited robot for your tasks</p>
         <li> <a style="cursor: pointer; color: blue;" onclick="App.showAddNewRobotPage()"><i class="fa fa-dashboard"></i> <span>Add New Robot</span></a></li>
         <li> <a style="cursor: pointer; color: blue;" onclick="App.showupdateOntologyPage()"><i class="fa fa-dashboard"></i> <span>Update ontology</span></a></li>
@@ -91,7 +91,7 @@
       <!-- Supplier page starts  -->
         <!-- Admin page starts  -->
         <div id="admin" style="display: none;">
-          <h1>IBBRS</h1>
+          <h1>IBBRB</h1>
         <p>Your Smart way to seelct the best suited robot for your tasks</p>
         <li> <a style="pointer-events: none; " onclick="App.showAddNewRobotPage()"><i class="fa fa-dashboard"></i> <span>Add New Robot</span></a></li>
         <li> <a style="pointer-events: none; " onclick="App.showupdateOntologyPage()"><i class="fa fa-dashboard"></i> <span>Update ontology</span></a></li>
@@ -150,7 +150,109 @@
            
           <div class="row">
             <h2>Add new Robot</h2>
+          
+            
+            <!-- purpose1 Begins -->
             <table class="table">
+              <tr>
+                <td>Single or Multiple purpose robot</td>
+                <td>
+                  <select class="form-control" id="singleorMultiple">
+                    <option value="1" selected>Single</option>
+                    <option value="2">Multiple</option>               
+                </select>
+                </td>
+              </tr>
+
+              <tr>
+              <td>purpose1</td>
+                <td><input class="form-control" type="text" id="purpose1"></td>
+              </tr>
+            </table>
+           
+
+           
+            
+            <table class="table" style="border: 1px solid;margin-left: 20%;">
+           
+              <tr>
+                <td colspan="2" style="text-align:center;"> <h5>Purpose1 Description</h5></td>
+              </tr>
+             
+              <tr>
+                <td>&nbsp&nbsp&nbsp&nbsp</td>
+                <td>type of user</td>
+                <td><input type="text" class="form-control" id="typeuser_purpose1"></td>
+              </tr>
+              <tr>
+                <td>&nbsp&nbsp&nbsp&nbsp</td>
+                <td>Service Description</td>
+                <td><input type="text" class="form-control" id="serviceDesc_purpose1"></td>
+              </tr>
+              <tr>
+                <td>&nbsp&nbsp&nbsp&nbsp</td>
+                <td>Location</td>
+                <td><input type="text" class="form-control" id="location_purpose1"></td>
+              </tr>
+              <tr>
+                <td>&nbsp&nbsp&nbsp&nbsp</td>
+                <td>Environment</td>
+                <td><input type="text" class="form-control" id="environment_purpose1"></td>
+              </tr>
+              <tr>
+              <td>&nbsp&nbsp&nbsp&nbsp</td>
+                <td>Time</td>
+                <td><input type="text" class="form-control" id="time_purpose1"></td>
+              </tr>
+            </table>
+            <!-- purpose1 Ends -->
+           
+            
+            <!-- purpose2 Begins -->
+            <table class="table purposetworow" style="display:none;">
+              <tr>
+              <td>purpose2</td>
+                <td><input class="form-control" type="text" id="purpose2"></td>
+              </tr>
+            </table>
+            <table class="table purposetworow" style="border: 1px solid;margin-left: 20%;display:none;">
+              <tr>
+                <td colspan="2" style="text-align:center;"> <h5>Purpose2 Description</h5></td>
+              </tr>
+              <tr>
+                <td>&nbsp&nbsp&nbsp&nbsp</td>
+                <td>type of user</td>
+                <td><input type="text" class="form-control" id="typeuser_purpose2"></td>
+              </tr>
+              <tr>
+                <td>&nbsp&nbsp&nbsp&nbsp</td>
+                <td>Service Description</td>
+                <td><input type="text" class="form-control" id="serviceDesc_purpose2"></td>
+              </tr>
+              <tr>
+                <td>&nbsp&nbsp&nbsp&nbsp</td>
+                <td>Location</td>
+                <td><input type="text" class="form-control" id="location_purpose2"></td>
+              </tr>
+              <tr>
+                <td>&nbsp&nbsp&nbsp&nbsp</td>
+                <td>Environment</td>
+                <td><input type="text" class="form-control" id="environment_purpose2"></td>
+              </tr>
+              <tr>
+              <td>&nbsp&nbsp&nbsp&nbsp</td>
+                <td>Time</td>
+                <td><input type="text" class="form-control" id="time_purpose2"></td>
+              </tr>
+            </table>
+            <!-- purpose2 Ends -->
+            <table class="table">
+              <tr >
+                <td>Robot Name</td>
+                <td><input  class="form-control" type="text" id="robotname"></td>
+              </tr>
+            </table>
+            <!-- <table class="table">
               <tr>
                 <td>Single or Multiple purpose robot</td>
                 <td>
@@ -164,15 +266,31 @@
                 <td>purpose</td>
                 <td><input class="form-control" type="text" id="purpose1"></td>
               </tr>
-              <tr style="display: none;" id="purposetworow">
-                <td>purpose</td>
+              <tr style="display: none;" class="purposetworow">
+                <td>purpose2 Name</td>
                 <td><input class="form-control" type="text" id="purpose2"></td>
+              </tr>
+              <tr style="display: none;" class="purposetworow">
+                <td></td>
+                <td><input class="form-control" type="text" id="purpose2" placeholder="Service Requester"></td>
+              </tr>
+              <tr style="display: none;" class="purposetworow">
+                <td></td>
+                <td><input class="form-control" type="text" id="purpose2" placeholder="Description"></td>
+              </tr>
+              <tr style="display: none;" class="purposetworow">
+                <td></td>
+                <td><input class="form-control" type="text" id="purpose2" placeholder="Location"></td>
+              </tr>
+              <tr style="display: none;" class="purposetworow">
+                <td></td>
+                <td><input class="form-control" type="text" id="purpose2" placeholder="Time"></td>
               </tr>
               <tr >
                 <td>Robot Name</td>
                 <td><input  class="form-control" type="text" id="robotname"></td>
               </tr>
-            </table>
+            </table> -->
           </div>
           <div class="row">
           <div class="col col-12 col-sm-4 col-md-4 col-lg-4">              
@@ -191,10 +309,11 @@
                 
                  $filename = 'RAO_changeFromRequest';
                  $filextention = 'xml';
-                 $filepath = 'http://localhost/Robot/docs/';
+                 $filepath = 'http://localhost:8080/Robot/docs/';
                  //$filfullpath = $filename.'.'.$filextention;  
                  $filfullpath=$_SERVER["DOCUMENT_ROOT"] . '/Robot/docs/'. $filename.'.'.$filextention   ;          
-                 $doc->load($filfullpath);
+                 $doc->loadXML($filfullpath);
+
                 $k=1;
                 while(1) {
                     if (file_exists($filfullpath)) {
@@ -210,8 +329,8 @@
                     $k= $k+1;
                 } 
 
-                 $doc->save('t.xml');
-                 $xsdstring = file_get_contents('t.xml');
+                 $doc->save($_SERVER["DOCUMENT_ROOT"] . '/Robot/docs/t.xml');
+                 $xsdstring = file_get_contents($_SERVER["DOCUMENT_ROOT"] . '/Robot/docs/t.xml');
                  $doc->loadXML(mb_convert_encoding($xsdstring, 'utf-8', mb_detect_encoding($xsdstring)));
                  $xpath = new DOMXPath($doc);
                  $xpath->registerNamespace('xs', 'http://www.w3.org/2001/XMLSchema');
@@ -247,13 +366,16 @@
                      <?php
                           if($atr=="subjective"){
                      ?>  
-                       <td><select class="form-control" id=<?php echo  $atr.$z ?>>
+                       <td>
+                        <!-- <select class="form-control" id=<?php echo  $atr.$z ?>>
                          <option value="5">High</option>
                          <option value="4">Medium High</option>
                          <option value="3">Medium </option>
                          <option value="2">Medium Low </option>
                          <option value="1">Low </option>
-                       </select></td>
+                       </select> -->
+                       <input type="text"  id=<?php echo  $atr.$z ?> class="form-control"  >
+                      </td>
                       <?php
                          }
                          else{

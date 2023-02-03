@@ -26,8 +26,10 @@ const App = {
 			  return
 			}	
 			App.loading=true;
-			//window.alert(App.account);
-			var role=await App.robot.roles(App.account);			
+			
+		
+			var role=await App.robot.roles(App.account);
+				
 			if(role=="1"){
 				//customer page
 				$("#customer").show();
@@ -177,24 +179,182 @@ const App = {
 					
 					 console.log("id="+App.selectedRobos[q])
 					// console.log("new rating"+App.selectedRatings[q])
-					
-					var data=await $.post("../docs/rating.php", {id: App.selectedRobos[q]});
-					//data.append(App.selectedRatings[q]);
-					var myArray = JSON.parse(data);
-					myArray.push(App.selectedRatings[q]);
-					//convert to int array
-					for(z=0;z<myArray.length;z++){
-						myArray[z]=parseInt(myArray[z]);
+
+
+
+					//Step1 check single or multi purpose
+					var multi=await $.post("../docs/checkMulti.php", {id: App.selectedRobos[q]});
+					window.alert(multi);
+					//If multi puprose Robot
+					if(multi=="Multi"){
+						var keywords1=await $.post("../docs/getkeywords1.php", {id: App.selectedRobos[q]});
+						//window.alert(keywords1);
+						var keywords2=await $.post("../docs/getkeywords2.php", {id: App.selectedRobos[q]});
+						//window.alert(keywords2);
+						var ratingOverAll=await $.post("../docs/getOverAllRating.php", {id: App.selectedRobos[q]});
+						
+						var ratingPupose1=await $.post("../docs/getPurppose1Rating.php", {id: App.selectedRobos[q]});
+						
+						var ratingPupose2=await $.post("../docs/getPurpose2Rating.php", {id: App.selectedRobos[q]});
+						
+						var selectedrobopurpose="#selectrobopurpose"+App.selectedRobos[q].toString();
+						//window.alert(selectedrobopurpose)
+						//window.alert($(selectedrobopurpose).val())
+						//case1. Not at all rated
+						if(ratingPupose1=="0" && ratingPupose2=="0" && ratingOverAll=="0"){
+							if($(selectedrobopurpose).val()=="0"){// if overall
+								
+								await $.post("../docs/updateMultiroboRating.php", {id: App.selectedRobos[q],r:App.selectedRatings[q],p1r:"0",p2r:"0",c:App.account,case:"0000",o:ratingOverAll,rs1:ratingPupose1,rs2:ratingPupose2});
+								
+							}
+							if($(selectedrobopurpose).val()=="1"){// if purpose1 rating
+								//predict p2 score using obj4
+								
+							   	r2=await $.post("../docs/obj4.php",{p1r:App.selectedRatings[q],
+								p2r:ratingPupose2,
+								r:ratingOverAll,
+								keywords1:keywords1,
+								keywords2:keywords2
+								})
+								
+								await $.post("../docs/updateMultiroboRating.php", {id: App.selectedRobos[q],r:"0",p1r:App.selectedRatings[q],p2r:r2,c:App.account,case:"0001",o:ratingOverAll,rs1:ratingPupose1,rs2:ratingPupose2});	
+								
+							}
+							if($(selectedrobopurpose).val()=="2"){// if purpose1 rating
+								//predict p1 score using obj4
+								window.alert("no rating selected purpose2")
+							   	r2=await $.post("../docs/obj4.php",{p1r:ratingPupose1,
+								p2r:App.selectedRatings[q],
+								r:ratingOverAll,
+								keywords1:keywords1,
+								keywords2:keywords2
+								})
+								window.alert("Predicted score is"+r2)
+								await $.post("../docs/updateMultiroboRating.php", {id: App.selectedRobos[q],r:"0",p1r:r2,p2r:App.selectedRatings[q],c:App.account,case:"0002",o:ratingOverAll,rs1:ratingPupose1,rs2:ratingPupose2});		
+							}
+						}
+
+						if(ratingPupose1=="0" && ratingPupose2=="0" && ratingOverAll!="0"){
+							//Case 2 have overall score but no other scores
+
+							if($(selectedrobopurpose).val()=="0"){// if overall
+								var data=await $.post("../docs/rating.php", {id: App.selectedRobos[q]});
+								//data.append(App.selectedRatings[q]);
+								var myArray = JSON.parse(data);
+								myArray.push(App.selectedRatings[q]);
+								//convert to int array
+								for(z=0;z<myArray.length;z++){
+									myArray[z]=parseInt(myArray[z]);
+								}
+								//console.log(myArray);
+								//caculating reputation score for each robot selected
+								var reputationscore=await $.post("../docs/NDR.php",{ r: myArray} );
+								await $.post("../docs/updateMultiroboRating.php", {id: App.selectedRobos[q],r:App.selectedRatings[q],p1r:"0",p2r:"0",c:App.account,case:"0010",o:reputationscore,rs1:ratingPupose1,rs2:ratingPupose2});
+								
+							}
+							if($(selectedrobopurpose).val()=="1"){// if purpose1 rating
+								//predict p2 score using obj4
+								
+							   	r2=await $.post("../docs/obj4.php",{p1r:App.selectedRatings[q],
+								p2r:ratingPupose2,
+								r:ratingOverAll,
+								keywords1:keywords1,
+								keywords2:keywords2
+								})
+								
+								await $.post("../docs/updateMultiroboRating.php", {id: App.selectedRobos[q],r:"0",p1r:App.selectedRatings[q],p2r:r2,c:App.account,case:"0011",o:ratingOverAll,rs1:ratingPupose1,rs2:ratingPupose2});	
+								
+							}
+							if($(selectedrobopurpose).val()=="2"){// if purpose1 rating
+								//predict p1 score using obj4
+								//window.alert("no rating selected purpose2")
+							   	r2=await $.post("../docs/obj4.php",{p1r:ratingPupose1,
+								p2r:App.selectedRatings[q],
+								r:ratingOverAll,
+								keywords1:keywords1,
+								keywords2:keywords2
+								})
+								//window.alert("Predicted score is"+r2)
+								await $.post("../docs/updateMultiroboRating.php", {id: App.selectedRobos[q],r:"0",p1r:r2,p2r:App.selectedRatings[q],c:App.account,case:"0012",o:ratingOverAll,rs1:ratingPupose1,rs2:ratingPupose2});		
+							}
+						}
+
+						if(ratingPupose1!="0" && ratingPupose2!="0" && ratingOverAll!="0"){
+							//Case 3 have all the scores
+
+							if($(selectedrobopurpose).val()=="0"){// if overall
+								var data=await $.post("../docs/rating.php", {id: App.selectedRobos[q]});
+								//data.append(App.selectedRatings[q]);
+								var myArray = JSON.parse(data);
+								myArray.push(App.selectedRatings[q]);
+								//convert to int array
+								for(z=0;z<myArray.length;z++){
+									myArray[z]=parseInt(myArray[z]);
+								}
+								//console.log(myArray);
+								//caculating reputation score for each robot selected
+								var reputationscore=await $.post("../docs/NDR.php",{ r: myArray} );
+								await $.post("../docs/updateMultiroboRating.php", {id: App.selectedRobos[q],r:App.selectedRatings[q],p1r:"0",p2r:"0",c:App.account,case:"1110",o:reputationscore,rs1:ratingPupose1,rs2:ratingPupose2});
+								
+							}
+							if($(selectedrobopurpose).val()=="1"){// if purpose1 rating
+								//predict p2 score using obj4
+								
+							   	r2=await $.post("../docs/obj4.php",{p1r:App.selectedRatings[q],
+								p2r:ratingPupose2,
+								r:ratingOverAll,
+								keywords1:keywords1,
+								keywords2:keywords2
+								})
+								
+								await $.post("../docs/updateMultiroboRating.php", {id: App.selectedRobos[q],r:"0",p1r:App.selectedRatings[q],p2r:r2,c:App.account,case:"1011",o:ratingOverAll,rs1:ratingPupose1,rs2:ratingPupose2});	
+								
+							}
+							if($(selectedrobopurpose).val()=="2"){// if purpose1 rating
+								//predict p1 score using obj4
+								//window.alert("no rating selected purpose2")
+							   	r2=await $.post("../docs/obj4.php",{p1r:ratingPupose1,
+								p2r:App.selectedRatings[q],
+								r:ratingOverAll,
+								keywords1:keywords1,
+								keywords2:keywords2
+								})
+								//window.alert("Predicted score is"+r2)
+								await $.post("../docs/updateMultiroboRating.php", {id: App.selectedRobos[q],r:"0",p1r:r2,p2r:App.selectedRatings[q],c:App.account,case:"0111",o:ratingOverAll,rs1:ratingPupose1,rs2:ratingPupose2});		
+							}
+						}
+
+
+
+
 					}
-					console.log(myArray);
-					//caculating reputation score for each robot selected
-					var reputationscore=await $.post("../docs/NDR.php",{ r: myArray} );
-					console.log("Reputation score="+reputationscore);
-					//For handlig decimal values
-					reputationscores.push(reputationscore*100);
+					else{
+						//if Single purpose Robot
+						window.alert("selected single")	
+						var data=await $.post("../docs/rating.php", {id: App.selectedRobos[q]});
+						//data.append(App.selectedRatings[q]);
+						var myArray = JSON.parse(data);
+						myArray.push(App.selectedRatings[q]);
+						//convert to int array
+						for(z=0;z<myArray.length;z++){
+							myArray[z]=parseInt(myArray[z]);
+						}
+						console.log(myArray);
+						//caculating reputation score for each robot selected
+						var reputationscore=await $.post("../docs/NDR.php",{ r: myArray} );
+						console.log("Reputation score="+reputationscore);
+						//For handlig decimal values
+						reputationscores.push(reputationscore*100);
+						//updating database
+						var p=await $.post("../docs/updateSingleRoboRating.php", {id: App.selectedRobos[q],r:App.selectedRatings[q],p1r:reputationscore,c:App.account})
+						window.alert("updated"+p)
+					}
+
+
+				
 				}
-				console.log(reputationscores)
-				await App.robot.addRatings(reputationscores,App.selectedRobos,{from:App.account});
+				//console.log(reputationscores)
+				//await App.robot.addRatings(reputationscores,App.selectedRobos,{from:App.account});
 				form.submit();
 			}			
 			else{
@@ -232,6 +392,7 @@ const App = {
 	//   },
 	  showRatingRobotPage :async ()=>{
 		var count=await App.robot.totalRobots();
+		
 		var totalCustomer=await App.robot.customerCount();
 		$("#displayallrobots").hide();
 		$("#displayallrobots").empty();
@@ -262,20 +423,27 @@ const App = {
 				var str="";
 				//hidden fields
 				var purpose='';
+				multipurpose=false;
+				vardropdownstr='';
 				if(roboinfo[2]!=""){
 					purpose=roboinfo[1]+","+roboinfo[2];
+					multipurpose=true;
+					vardropdownstr=`<select class="form-control" id='selectrobopurpose`+i+`' name="robo_purpose[]" ><option value="0">Overall</option><option value="1">`+roboinfo[1]+`</option><option value="2">`+roboinfo[2]+`</option></select>`;
+					console.log(vardropdownstr);
 				}
 				else{
-					purpose=roboinfo[1]	
+					purpose=roboinfo[1]	;
+					multipurpose=false;
+					vardropdownstr=`<input type="text" class="form-control" value='`+purpose+`'  name="robo_purpose[]" readonly>`;
 				}
 				var rated=await App.robot.ratedotnot(App.account,i);
 				if(rated=="1"){
-					str="<tr><td>"+`<input type="checkbox" id='selectedRobo`+i+`' name="robo_checkBox[]" disabled>`+"</td><td>"+`<input type="text" class="form-control" value='`+roboinfo[0]+`'  name="robo_id[]" readonly>`+"</td><td>"+`<input type="text" class="form-control" value='`+roboinfo[3]+`'  name="robo_name[]" readonly>`+"</td><td>"+`<input type="text" class="form-control" value='`+purpose+`'  name="robo_purpose[]" readonly>`+"</td><td>"+`<input type="text" class="form-control" value='`+avgRating.toString()+`'  name="robo_score[]" readonly>`+"</td><td>";
+					str="<tr><td>"+`<input type="checkbox" id='selectedRobo`+i+`' name="robo_checkBox[]" disabled>`+"</td><td>"+`<input type="text" class="form-control" value='`+roboinfo[0]+`'  name="robo_id[]" readonly>`+"</td><td>"+`<input type="text" class="form-control" value='`+roboinfo[3]+`'  name="robo_name[]" readonly>`+"</td><td>"+vardropdownstr+"</td><td>"+`<input type="text" class="form-control" value='`+avgRating.toString()+`'  name="robo_score[]" readonly>`+"</td><td>";
 				
 					str=str+`<select class="form-control" id='selectrobo`+i+`' name="robo_selectrating[]" disabled><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td>`;
 				}
 				else{
-					str="<tr><td>"+`<input type="checkbox" id='selectedRobo`+i+`' name="robo_checkBox[]" >`+"</td><td>"+`<input type="text" class="form-control" value='`+roboinfo[0]+`'  name="robo_id[]" readonly>`+"</td><td>"+`<input type="text" class="form-control" value='`+roboinfo[3]+`'  name="robo_name[]" readonly>`+"</td><td>"+`<input type="text" class="form-control" value='`+purpose+`'  name="robo_purpose[]" readonly>`+"</td><td>"+`<input type="text" class="form-control" value='`+avgRating.toString()+`'  name="robo_score[]" readonly>`+"</td><td>";
+					str="<tr><td>"+`<input type="checkbox" id='selectedRobo`+i+`' name="robo_checkBox[]" >`+"</td><td>"+`<input type="text" class="form-control" value='`+roboinfo[0]+`'  name="robo_id[]" readonly>`+"</td><td>"+`<input type="text" class="form-control" value='`+roboinfo[3]+`'  name="robo_name[]" readonly>`+"</td><td>"+vardropdownstr+"</td><td>"+`<input type="text" class="form-control" value='`+avgRating.toString()+`'  name="robo_score[]" readonly>`+"</td><td>";
 				
 					str=str+`<select class="form-control" id='selectrobo`+i+`' name="robo_selectrating[]"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td>`;
 				}
@@ -498,9 +666,21 @@ const App = {
 	  saveAddnewRobot :async ()=>{
 
 
+			var oneortwo=$("#singleorMultiple").val();
+			var singleormulti="";
+			if(oneortwo=="1"){
+				singleormulti="Single";
+			}
+			else{
+				singleormulti="Multi";
+			}
 
 			var purpose1=$("#purpose1").val();
 			var purpose2=$("#purpose2").val();
+			var keyword1=$("#typeuser_purpose1").val()+" "+$("#serviceDesc_purpose1").val()+" "+$("#location_purpose1").val()+" "+$("#environment_purpose1").val()+" "+$("#time_purpose1").val();
+			var keyword2=$("#typeuser_purpose2").val()+" "+$("#serviceDesc_purpose2").val()+" "+$("#location_purpose2").val()+" "+$("#environment_purpose2").val()+" "+$("#time_purpose2").val();
+
+
 			var robotname=$("#robotname").val();
 			var subjectivedata=[];
 			var objectivedata=[];
@@ -515,7 +695,7 @@ const App = {
 					}	
 				} 			
 			}
-			console.log(r2);
+			//console.log(r2);
 			for(var q=0;q<50;q++){
 				var id="#objective"+q.toString();	
 				if( $(id).length ){
@@ -587,7 +767,9 @@ const App = {
 				//var str="('" +id1.toString()+ "' )";
 				
 				
-				var str="('" +id1.toString()+ "', '"+robotname + "', '" + purpose1 + "', '" + App.account + "', '" + "New Robot" + "', '" +predictedscore + "')";
+				var str="('" +id1.toString()+ "', '"+robotname + "', '" + singleormulti + "', '" + App.account + "', '" + "New Robot" + "', '" +predictedscore + "', '"+purpose1 + "', '" + purpose2 + "', '" + keyword1 + "', '" + keyword2 + "',0,0,0,0,0)";
+				console.log(str)
+
 				//window.alert(str)
 				var s=await $.post("../docs/insertNewRoboDB.php",{ str: str} );
 				console.log(s)
@@ -653,11 +835,13 @@ const App = {
 		  },
 		  loadContract: async () => {
 			// Create a JavaScript version of the smart contract
+			
 			const Robot = await $.getJSON('Robot.json')
 			App.contracts.Robot = TruffleContract(Robot)
 			App.contracts.Robot.setProvider(App.web3Provider)
 			// Hydrate the smart contract with values from the blockchain
 			App.robot = await App.contracts.Robot.deployed()
+			
 		  },
 }; 
 
@@ -666,10 +850,10 @@ $(window).on('load', function(){ App.load();});
 
 $("#singleorMultiple").change(function() {
 	if($("#singleorMultiple").val()=="2"){
-		$("#purposetworow").show();
+		$(".purposetworow").show();
 	}
 	else{
-		$("#purposetworow").hide();
+		$(".purposetworow").hide();
 	}	
 });
  
